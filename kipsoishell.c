@@ -67,13 +67,15 @@ int main() {
 
 		args[args_size] = NULL;
 
-		//see the parsed arguments
+		/*
+		/see the parsed arguments
 		printf("Parsed arguments:\n");
 		for (int j = 0; j < args_size; j++){
 			printf(" args[%d] = '%s'\n", j, args[j]);
 		}
 		// Debug: show what user typed
 //		printf("You typed: %s\n", input);
+		*/
 		//=== Execute command ===
 		pid_t pid = fork();
 		if (pid == 0) {
