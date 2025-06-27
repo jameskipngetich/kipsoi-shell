@@ -10,18 +10,7 @@ int main() {
 	size_t len = 0;     		//buffer size (getline will set it)
 	ssize_t nread;
 
-	//initializingg variables for the argument distincion
-	char **args = NULL;  //pointer to array of strings
-        int args_size = 0;
-	int args_capacity = 8;    // start small, grow as needed
 	
-	// defining the size of the array using malloc
-	args = malloc(args_capacity * sizeof(char *));
-	if (!args) {
-		perror("malloc failed\n");
-		exit(1);
-	}
-
 	// Welcome message
 	printf("Welcome to the Kipsoi s.h.e.l.l.\n");
 	printf("===============Remember Always Have Fun========================\n");
@@ -47,6 +36,18 @@ int main() {
 			}
 
 		// Breaking down user input to arguments and commands
+		//initializingg variables for the argument distincion
+		char **args = NULL;  //pointer to array of strings
+		int args_size = 0;
+		int args_capacity = 8;    // start small, grow as needed
+		
+		// defining the size of the array using malloc
+		args = malloc(args_capacity * sizeof(char *));
+		if (!args) {
+			perror("malloc failed\n");
+			exit(1);
+		}
+
 		char *token = strtok(input, " ");
 		while (token != NULL) {
 			//Resize if full
@@ -81,7 +82,7 @@ int main() {
 				perror("Command Failed");
 			}
 			exit(EXIT_FAILURE);   //only if exec fails
-			free(args);
+			
 		} else if (pid > 0) {
 			// Parent process
 			wait(NULL);
@@ -89,7 +90,7 @@ int main() {
 			perror("fork failed");
 		}
 
-		
+		free(args);
 		
 
 	}
