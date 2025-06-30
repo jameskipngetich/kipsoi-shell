@@ -77,11 +77,26 @@ int main() {
 //		printf("You typed: %s\n", input);
 		*/
 		//=== Execute command ===
+		// Handle internal command: cd
+		if (strcmp(args[0], "cd") == 0){
+			if (args[1] == NULL) {
+				fprintf(stderr, "kipsoish: expected argument to  \"cd\"\n");
+			} else{
+				if (chdir(args[1]) != 0){
+					perror("kipsoish");
+				}
+			}
+
+			free(args);
+			continue;  // skip fork/exec for internal command
+		}
+
+		//creating a child process using fork()
 		pid_t pid = fork();
 		if (pid == 0) {
 			//child process
 			if (execvp(args[0], args) == -1){
-				perror("Command Failed");
+				fprintf(stderr, "kipsoish: command not found: %s\n", args[0]);
 			}
 			exit(EXIT_FAILURE);   //only if exec fails
 			
