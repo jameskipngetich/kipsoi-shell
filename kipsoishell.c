@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>          		//for fork(), execpv()
-#include <sys/wait.h>			//for wait()
+#include <sys/wait.h> 			//for wait()
+#include <limits.h>			//for PATH_MAX
 int main() {
 	char *input = NULL;      	//will hold the input line
 	size_t len = 0;     		//buffer size (getline will set it)
@@ -16,7 +17,16 @@ int main() {
 	printf("===============Remember Always Have Fun========================\n");
 
 	while (1){
-		printf("kipsoish> ");
+
+		//creating the prompt message
+
+		char cwd[PATH_MAX];
+		if (getcwd(cwd, sizeof(cwd)) != NULL){
+			printf("%s:)", cwd);
+		} else {
+			perror("getcwd() error");
+		}
+		//printf("kipsoish> ");
 		nread = getline(&input, &len, stdin);
 
 		if (nread == -1){
