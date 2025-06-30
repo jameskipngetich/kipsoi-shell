@@ -74,7 +74,7 @@ int main() {
 			printf(" args[%d] = '%s'\n", j, args[j]);
 		}
 		// Debug: show what user typed
-//		printf("You typed: %s\n", input);
+        // printf("You typed: %s\n", input);
 		*/
 		//=== Execute command ===
 		// Handle internal command: cd
