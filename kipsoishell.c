@@ -52,6 +52,22 @@ int main() {
 		       printf("\nThank you! Come back again!\n");	
 			break;
 			}
+		
+		// Running a command from history
+		if (input[0] == '!' && history_count > 0) {
+			int cmd_num = atoi(&input[1]);  //convert "!2" to 2
+
+			if (cmd_num <= 0 || cmd_num > history_count) {
+				printf("kipsoish: no such command in history\n");
+				continue;
+			}
+			// Replace input with the historical command
+			free(input);  // free old line buffer
+			input = strdup(history[cmd_num - 1]); 
+			len = strlen(input) + 1; // update length for correctness
+
+			printf("Running: %s\n", input);
+		}
 
 		// Breaking down user input to arguments and commands
 		//initializingg variables for the argument distincion
