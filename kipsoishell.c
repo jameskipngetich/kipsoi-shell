@@ -6,11 +6,14 @@
 #include <unistd.h>          		//for fork(), execpv()
 #include <sys/wait.h> 			//for wait()
 #include <limits.h>			//for PATH_MAX
+//for history recording
+#define HISTORY_MAX 100
 int main() {
 	char *input = NULL;      	//will hold the input line
 	size_t len = 0;     		//buffer size (getline will set it)
 	ssize_t nread;
-
+	char *history[HISTORY_MAX];
+	int history_count = 0;
 	
 	// Welcome message
 	printf("Welcome to the Kipsoi s.h.e.l.l.\n");
@@ -28,6 +31,11 @@ int main() {
 		}
 		//printf("kipsoish> ");
 		nread = getline(&input, &len, stdin);
+
+		//record history of commands
+		if (history_count < HISTORY_MAX) {
+			history[history_count++] = strdup(input);
+		}
 
 		if (nread == -1){
 			printf("\nExiting shell.\n");
@@ -101,6 +109,15 @@ int main() {
 			continue;  // skip fork/exec for internal command
 		}
 
+		//checking for the history command
+		if (strcmp(args[0], "history") == 0) {
+			for (int i = 0; i < history_count; i++){
+				printf("%d: %s\n", i + 1, history[i]);
+			}
+			free(args);
+			continue;
+		}
+
 		//creating a child process using fork()
 		pid_t pid = fork();
 		if (pid == 0) {
@@ -123,5 +140,9 @@ int main() {
 	}
 	
 	free(input);	// free dynamically allocated buffer
+	for (int i = 0; i < history_count; i++) {
+		free(history[i]);  // free each saved command
+	}
 	return 0;	
+
 }
