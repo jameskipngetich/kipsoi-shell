@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <readline/rltypedefs.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>          		//for fork(), execpv()
@@ -10,11 +11,21 @@
 #include <limits.h>			//for PATH_MAX
 //for history recording
 #define HISTORY_MAX 100
+
+// Tab completion function, simple completion: use default filename + command completion
+char **mysh_completion(const char *text, int start, int end) {
+	rl_attempted_completion_over = 0;  // allow default behavior
+	return rl_completion_matches(text, rl_filename_completion_function);
+}
+
+// The Main Function
 int main() {
 	char *input = NULL;      	//will hold the input line
 	size_t len = 0;     		//buffer size (getline will set it)
 	char *history[HISTORY_MAX];
 	int history_count = 0;
+
+	rl_attempted_completion_function = mysh_completion;
 	
 	// Welcome message
 	printf("Welcome to the Kipsoi s.h.e.l.l.\n");
