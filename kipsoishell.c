@@ -1,6 +1,8 @@
 // This is a simple C shell
 
 #include<stdio.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>          		//for fork(), execpv()
@@ -11,7 +13,6 @@
 int main() {
 	char *input = NULL;      	//will hold the input line
 	size_t len = 0;     		//buffer size (getline will set it)
-	ssize_t nread;
 	char *history[HISTORY_MAX];
 	int history_count = 0;
 	
@@ -24,19 +25,26 @@ int main() {
 		//creating the prompt message
 
 		char cwd[PATH_MAX];
-		if (getcwd(cwd, sizeof(cwd)) != NULL){
-			printf("%s:)", cwd);
-		} else {
-			perror("getcwd() error");
+		getcwd(cwd, sizeof(cwd));
+		char prompt[PATH_MAX + 5];
+		
+		snprintf(prompt, sizeof(prompt), "%s:) ",cwd); // formart prompt
+		input = readline(prompt);
+		if (!input) {
+			printf("\nExiting shell.\n");
+			break;
 		}
-		//printf("kipsoish> ");
-		nread = getline(&input, &len, stdin);
+
+		//save to readline's history
+		if (*input) {
+			add_history(input);
+		}
 
 		//record history of commands
 		if (history_count < HISTORY_MAX) {
 			history[history_count++] = strdup(input);
 		}
-
+/*
 		if (nread == -1){
 			printf("\nExiting shell.\n");
 			break;   		//error or Ctrl+D
@@ -46,7 +54,7 @@ int main() {
 		if (input[nread - 1] == '\n'){
 			input[nread - 1] = '\0';
 		}
-
+*/
 		// Exit command
 		if (strcmp(input, "exit") == 0){
 		       printf("\nThank you! Come back again!\n");	

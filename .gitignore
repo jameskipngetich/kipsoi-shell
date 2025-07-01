@@ -1,5 +1,6 @@
 theshell
 kipsoishell
-*.swp
+.theshell.c.swp
 chatgpt.c
 chatgpt
+.theshell.c.swp
